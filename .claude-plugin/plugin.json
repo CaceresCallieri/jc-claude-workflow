@@ -1,0 +1,7 @@
+{
+  "name": "jc-claude-workflow",
+  "description": "Portable dev workflow: code review pipeline with auto-triage and browser testing, plus conventional commit skill",
+  "author": {
+    "name": "JC"
+  }
+}
