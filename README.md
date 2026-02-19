@@ -22,10 +22,16 @@ A Claude Code plugin that packages a portable dev workflow for use across machin
 ## Installation
 
 ```bash
-# From GitHub
-/plugin install github.com/CaceresCallieri/jc-claude-workflow
+# Step 1: Register the marketplace
+/plugin marketplace add CaceresCallieri/jc-claude-workflow
 
-# From local path (for development)
+# Step 2: Install the plugin
+/plugin install jc-claude-workflow@jc-claude-workflow
+```
+
+For local development:
+
+```bash
 /plugin install ~/Dev/jc-claude-workflow
 ```
 
@@ -34,7 +40,7 @@ A Claude Code plugin that packages a portable dev workflow for use across machin
 After pushing changes to GitHub, update on the target machine:
 
 ```bash
-/plugin update jc-claude-workflow
+/plugin update jc-claude-workflow@jc-claude-workflow
 ```
 
 ## Prerequisites

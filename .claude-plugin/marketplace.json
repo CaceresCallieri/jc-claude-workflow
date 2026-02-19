@@ -1,0 +1,14 @@
+{
+  "name": "jc-claude-workflow",
+  "description": "JC's portable dev workflow plugin collection",
+  "owner": {
+    "name": "CaceresCallieri"
+  },
+  "plugins": [
+    {
+      "name": "jc-claude-workflow",
+      "source": "./",
+      "description": "Code review pipeline with auto-triage and browser testing, plus conventional commit skill"
+    }
+  ]
+}
