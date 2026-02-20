@@ -124,9 +124,18 @@ Once ALL agents complete, present a unified report:
 
 ### Phase 6: Frontend Regression Testing (Web Projects Only)
 
-After completing the Phase 5 report, determine if this is a **web project** and if browser-based regression testing is appropriate.
+After completing the Phase 5 report, determine if browser-based regression testing is both **possible** and **appropriate**. Both pre-flight checks must pass — if either fails, skip Phase 6 entirely.
 
-#### Step 1: Detect Web Project
+#### Step 1: Pre-flight Checks
+
+**Check A — Chrome DevTools MCP available:**
+
+Verify that Chrome DevTools MCP tools are accessible by checking if `mcp__chrome-devtools__list_pages` is available as a tool. Do NOT call it — just check if it exists in your available tools.
+
+- If Chrome DevTools MCP tools are **not available**: **skip Phase 6 entirely**. Do not mention browser testing in the report — it is simply not an option in this environment.
+- If available: proceed to Check B.
+
+**Check B — Web project detected:**
 
 Check for ANY of these indicators (use Glob, do not ask the user):
 
@@ -136,6 +145,8 @@ Check for ANY of these indicators (use Glob, do not ask the user):
 - Significant `.html`, `.jsx`, `.tsx`, `.vue`, `.svelte`, `.astro` files in the changed files
 
 If **none** of these indicators are found, **skip Phase 6 entirely** — this is not a web project.
+
+**Both checks must pass to proceed.** If either fails, Phase 6 ends here — silently, with no mention in the report.
 
 #### Step 2: Determine Testable URL
 
@@ -245,5 +256,5 @@ Present ALL findings in a scannable table — **never omit any issue**.
 6. **Never over-fix** — agents implement exactly what's planned, no bonus refactoring
 7. **Report everything** — every change, skip, and decision appears in the final report
 8. **Testing guide is mandatory** — always provide verification steps and regression risks
-9. **Frontend testing is automatic for web projects** — Phase 6 runs without user prompting when web project indicators are detected; only ask the user for the dev server URL if it cannot be determined automatically
+9. **Frontend testing requires both conditions** — Phase 6 only runs when Chrome DevTools MCP is available AND web project indicators are detected. If either condition fails, skip Phase 6 silently. Only ask the user for the dev server URL if both pre-flight checks pass but the URL cannot be determined automatically
 10. **Frontend tester is read-only** — the frontend-tester agent verifies behavior but never modifies code; if it finds regressions, report them for the user to decide on next steps
