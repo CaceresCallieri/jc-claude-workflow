@@ -1,9 +1,4 @@
 {
   "outputStyle": "Explanatory",
-  "includeCoAuthoredBy": false,
-  "statusLine": {
-    "type": "command",
-    "command": "${CLAUDE_PLUGIN_ROOT}/status-line.sh",
-    "padding": 0
-  }
+  "includeCoAuthoredBy": false
 }
