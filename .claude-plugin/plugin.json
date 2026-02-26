@@ -1,6 +1,6 @@
 {
   "name": "jc-claude-workflow",
-  "description": "Portable dev workflow: code review pipeline with auto-triage and browser testing, plus conventional commit skill",
+  "description": "Portable dev workflow: code review, conventional commits, and statusline setup",
   "author": {
     "name": "JC"
   }

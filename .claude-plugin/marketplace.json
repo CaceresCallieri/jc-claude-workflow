@@ -8,7 +8,7 @@
     {
       "name": "jc-claude-workflow",
       "source": "./",
-      "description": "Code review pipeline with auto-triage and browser testing, plus conventional commit skill"
+      "description": "Code review pipeline, conventional commits, and statusline setup command"
     }
   ]
 }

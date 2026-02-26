@@ -14,6 +14,10 @@ A Claude Code plugin that packages a portable dev workflow for use across machin
 - **code-reviewer** — Expert code review sub-agent that analyzes code structure, identifies bugs, performance issues, and simplification opportunities.
 - **frontend-tester** — Browser-based QA agent that verifies UI behavior through Chrome DevTools MCP. Requires a Chrome DevTools MCP connection (works over reverse tunnels).
 
+### Commands
+
+- **setup-statusline** — One-time setup command (`/setup-statusline`) that installs a custom ANSI statusline script to `~/.claude/` and configures `settings.json`. Displays git info (branch, staged/unstaged changes), model name, and color-coded context window usage. Requires jq, git, tac, and a Nerd Font terminal.
+
 ### Settings
 
 - `outputStyle: Explanatory` — Educational insights alongside task completion.
@@ -32,7 +36,7 @@ A Claude Code plugin that packages a portable dev workflow for use across machin
 For local development:
 
 ```bash
-/plugin install ~/Dev/jc-claude-workflow
+/plugin install ~/projects/jc-claude-workflow
 ```
 
 ## Updating
@@ -46,4 +50,6 @@ After pushing changes to GitHub, update on the target machine:
 ## Prerequisites
 
 - **git** and **gh** CLI for the commit skill and GitHub integration
+- **jq** for the statusline script (JSON parsing)
+- **Nerd Font** in your terminal emulator for statusline icons
 - **Chrome DevTools MCP** connection for the frontend-tester agent (can work over SSH reverse tunnels)
