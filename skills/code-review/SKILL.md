@@ -16,7 +16,7 @@ Review code, auto-triage findings, fix obvious issues without asking, and only c
    - If no arguments: Review files modified during the current conversation
 
 2. **Launch the code-reviewer sub-agent**:
-   - Use the Task tool with `subagent_type: code-reviewer`
+   - Use the Task tool with `subagent_type: code-reviewer` and `model: "sonnet"`
    - Provide: target files, context about what was implemented, relevant architectural background
 
 3. **Present findings** using the Enhancement Table format below
@@ -128,12 +128,14 @@ After completing the Phase 5 report, determine if browser-based regression testi
 
 #### Step 1: Pre-flight Checks
 
-**Check A — Chrome DevTools MCP available:**
+**Check A — Browser automation available:**
 
-Verify that Chrome DevTools MCP tools are accessible by checking if `mcp__chrome-devtools__list_pages` is available as a tool. Do NOT call it — just check if it exists in your available tools.
+Check for `playwright-cli` availability by running `which playwright-cli` via Bash.
 
-- If Chrome DevTools MCP tools are **not available**: **skip Phase 6 entirely**. Do not mention browser testing in the report — it is simply not an option in this environment.
-- If available: proceed to Check B.
+- If `playwright-cli` is **found**: proceed to Check B (preferred path).
+- If `playwright-cli` is **not found**: check if Chrome DevTools MCP tools are available (is `mcp__chrome-devtools__list_pages` in your available tools?).
+  - If MCP is available: proceed to Check B (fallback path — include `**Tooling**: mcp` in the dispatch prompt at Step 4).
+  - If neither is available: **skip Phase 6 entirely**. Do not mention browser testing in the report — it is simply not an option in this environment.
 
 **Check B — Web project detected:**
 
@@ -154,7 +156,7 @@ Attempt to find the dev server URL:
 
 1. Check `package.json` `scripts` for dev/start commands (look for port numbers)
 2. Check for framework-standard ports: Vite (5173), Next.js (3000), Create React App (3000), Angular (4200), Nuxt (3000), Astro (4321)
-3. Check for running dev servers via `list_pages` (a page may already be open)
+3. Probe common ports for a running dev server: `curl -s -o /dev/null -w "%{http_code}" http://localhost:<port>` for each candidate port
 
 If no URL can be determined, **ask the user** with `AskUserQuestion`:
 ```
@@ -189,13 +191,14 @@ Convert the **Regression Risks** and **Testing Guide** from Phase 5 into a struc
 
 #### Step 4: Dispatch Frontend Tester
 
-Use the Task tool with `subagent_type: frontend-tester`:
+Use the Task tool with `subagent_type: frontend-tester` and `model: "sonnet"` (always specify the model explicitly to prevent inheriting the parent's model):
 
 ```
 You are testing a web application after a code review applied fixes.
 Verify that the changes did not introduce regressions.
 
 **URL**: [dev server URL]
+**Display**: headless
 
 **Context**: The following code review changes were made:
 [Brief summary of changes from Phase 5 Changes Made table]
@@ -209,6 +212,8 @@ Verify that the changes did not introduce regressions.
 **Known pre-existing issues** (ignore these):
 - [Any known console errors or warnings from the project]
 ```
+
+If Check A determined the MCP fallback path (playwright-cli not found), add `**Tooling**: mcp` to the prompt. The frontend-tester agent will use Chrome DevTools MCP tools when it sees this directive.
 
 #### Step 5: Present Browser Test Results
 
@@ -256,5 +261,5 @@ Present ALL findings in a scannable table — **never omit any issue**.
 6. **Never over-fix** — agents implement exactly what's planned, no bonus refactoring
 7. **Report everything** — every change, skip, and decision appears in the final report
 8. **Testing guide is mandatory** — always provide verification steps and regression risks
-9. **Frontend testing requires both conditions** — Phase 6 only runs when Chrome DevTools MCP is available AND web project indicators are detected. If either condition fails, skip Phase 6 silently. Only ask the user for the dev server URL if both pre-flight checks pass but the URL cannot be determined automatically
+9. **Frontend testing requires both conditions** — Phase 6 only runs when browser automation is available (playwright-cli preferred, Chrome DevTools MCP as fallback) AND web project indicators are detected. If either condition fails, skip Phase 6 silently. Only ask the user for the dev server URL if both pre-flight checks pass but the URL cannot be determined automatically
 10. **Frontend tester is read-only** — the frontend-tester agent verifies behavior but never modifies code; if it finds regressions, report them for the user to decide on next steps
